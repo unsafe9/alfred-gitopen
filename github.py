@@ -263,6 +263,61 @@ def get_clone_method(git_url: str, is_private_meta: Optional[bool] = None) -> st
     
     return method
 
+def fork_github_repository(repo_name: str, organization: str = None) -> Tuple[bool, str]:
+    """Fork a GitHub repository."""
+    try:
+        cmd = ['gh', 'repo', 'fork', repo_name]
+        
+        if organization:
+            cmd.extend(['--org', organization])
+        
+        # Don't clone automatically, we'll handle that separately
+        cmd.append('--remote=false')
+        
+        result = subprocess.run(cmd, capture_output=True, text=True)
+        
+        if result.returncode == 0:
+            return True, f"Successfully forked repository: {repo_name}"
+        else:
+            return False, f"Failed to fork repository: {result.stderr}"
+    
+    except Exception as e:
+        return False, f"Error forking repository: {str(e)}"
+
+def fork_and_clone_repository(repo_name: str, target_dir: str, organization: str = None) -> Tuple[bool, str]:
+    """Fork a GitHub repository and clone it locally."""
+    try:
+        # First, fork the repository
+        success, message = fork_github_repository(repo_name, organization)
+        if not success:
+            return False, message
+        
+        # Get the current user's username for the forked repo URL
+        result = subprocess.run(['gh', 'api', 'user'], capture_output=True, text=True)
+        if result.returncode != 0:
+            return False, "Failed to get current user information"
+        
+        user_info = json.loads(result.stdout)
+        username = user_info.get('login', '')
+        
+        if not username:
+            return False, "Failed to get username from GitHub"
+        
+        # Construct the forked repository name
+        original_repo = repo_name.split('/')[-1] if '/' in repo_name else repo_name
+        forked_repo_name = f"{username}/{original_repo}"
+        
+        # Clone the forked repository
+        clone_success, clone_message = clone_github_repository(forked_repo_name, target_dir)
+        
+        if clone_success:
+            return True, f"Successfully forked and cloned to: {target_dir}"
+        else:
+            return False, f"Forked successfully but clone failed: {clone_message}"
+    
+    except Exception as e:
+        return False, f"Error in fork and clone process: {str(e)}"
+
 def clone_repository_with_method(git_url: str, target_dir: str, is_private_meta: Optional[bool] = None) -> Tuple[bool, str]:
     """Clone a Git repository using the appropriate method."""
     from git import clone_repository

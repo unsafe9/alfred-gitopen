@@ -4,11 +4,7 @@ A simple Alfred workflow to quickly find and open local Git repositories and rec
 
 ## Prerequisites
 
-Some commands require **GitHub CLI (`gh`)** to be installed and authenticated:
-
-- **`githubclone`**: Requires GitHub CLI for repository search and private repository access
-- **`githubinit`**: Requires GitHub CLI for creating new repositories on GitHub
-- **Private repository cloning**: GitHub CLI provides the most reliable authentication for private repositories
+Some commands use GitHub CLI (`gh`) to be installed and authenticated.
 
 Install GitHub CLI: `brew install gh`  
 Authenticate: `gh auth login`
@@ -21,6 +17,7 @@ Authenticate: `gh auth login`
 - **`gitinit {repository_name}`**: Creates a new directory with the specified name, initializes it as a Git repository, and opens it in your chosen IDE.
 - **`githubclone {search_term}`**: Search and clone GitHub repositories by username/repository name or keywords, including private repositories for authenticated users.
 - **`githubinit {repository_name}`**: Create a new GitHub repository, initialize it locally, and open it in your chosen IDE.
+- **`githubfork {repository_url}`**: Fork and clone GitHub repositories.
 
 ## Installation
 
@@ -41,14 +38,3 @@ This workflow supports VSCode-like IDEs (e.g., Visual Studio Code, Cursor) and J
 ## License
 
 MIT License
-
-## TODO
-
-1. **`githubfork {repository_url}`**: Fork and clone GitHub repositories
-   - Parse GitHub repository URLs from clipboard or input
-   - Fork the repository to authenticated user's account
-   - Clone the forked repository to local workspace
-   - Set up upstream remote for easy contribution workflow
-   - Open in selected IDE with proper git configuration
-
-These features will integrate seamlessly with the existing workflow and provide a complete GitHub development experience within Alfred.

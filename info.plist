@@ -143,6 +143,32 @@
 				<false/>
 			</dict>
 		</array>
+		<key>A1B2C3D4-E5F6-G7H8-I9J0-K1L2M3N4O5P6</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>B2C3D4E5-F6G7-H8I9-J0K1-L2M3N4O5P6Q7</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>B2C3D4E5-F6G7-H8I9-J0K1-L2M3N4O5P6Q7</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>C3D4E5F6-G7H8-I9J0-K1L2-M3N4O5P6Q7R8</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>B023C0B5-9AFF-4414-A797-36E22A1353FA</key>
 		<array>
 			<dict>
@@ -846,6 +872,125 @@
 			<key>version</key>
 			<integer>2</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<true/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<true/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>githubfork</string>
+				<key>queuedelaycustom</key>
+				<integer>1</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>1</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string>Searching GitHub repositories to fork for "$1"...</string>
+				<key>script</key>
+				<string>python3 github_fork_search.py "$1"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string>GitHub Fork</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>A1B2C3D4-E5F6-G7H8-I9J0-K1L2M3N4O5P6</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<true/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>script</key>
+				<string>python3 ide_selector.py "$1"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string>Select an IDE to fork and open with...</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>B2C3D4E5-F6G7-H8I9-J0K1-L2M3N4O5P6Q7</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>python3 github_fork_handler.py "$1"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>C3D4E5F6-G7H8-I9J0-K1L2-M3N4O5P6Q7R8</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string></string>
@@ -856,26 +1001,26 @@
 			<key>xpos</key>
 			<real>30</real>
 			<key>ypos</key>
-			<real>565</real>
+			<real>45</real>
 		</dict>
 		<key>545F1082-F996-4A2E-9816-12BEE0BD562E</key>
 		<dict>
 			<key>xpos</key>
-			<real>405</real>
+			<real>285</real>
 			<key>ypos</key>
-			<real>445</real>
+			<real>45</real>
 		</dict>
 		<key>5EB4E017-1CE5-4E85-BE22-82AF87A3CD38</key>
 		<dict>
 			<key>xpos</key>
-			<real>195</real>
+			<real>405</real>
 			<key>ypos</key>
-			<real>350</real>
+			<real>45</real>
 		</dict>
 		<key>B023C0B5-9AFF-4414-A797-36E22A1353FA</key>
 		<dict>
 			<key>xpos</key>
-			<real>35</real>
+			<real>30</real>
 			<key>ypos</key>
 			<real>205</real>
 		</dict>
@@ -889,72 +1034,114 @@
 		<key>E23D539D-5EC9-4878-8D55-CFDFDBAB1487</key>
 		<dict>
 			<key>xpos</key>
-			<real>385</real>
+			<real>405</real>
 			<key>ypos</key>
-			<real>310</real>
+			<real>205</real>
 		</dict>
 		<key>F1A2B3C4-D5E6-F7G8-H9I0-J1K2L3M4N5O6</key>
 		<dict>
 			<key>xpos</key>
 			<real>30</real>
 			<key>ypos</key>
-			<real>725</real>
+			<real>365</real>
 		</dict>
 		<key>G2H3I4J5-K6L7-M8N9-O0P1-Q2R3S4T5U6V7</key>
 		<dict>
 			<key>xpos</key>
 			<real>285</real>
 			<key>ypos</key>
-			<real>725</real>
+			<real>365</real>
 		</dict>
 		<key>H3I4J5K6-L7M8-N9O0-P1Q2-R3S4T5U6V7W8</key>
 		<dict>
 			<key>xpos</key>
 			<real>405</real>
 			<key>ypos</key>
-			<real>725</real>
+			<real>365</real>
 		</dict>
 		<key>I4J5K6L7-M8N9-O0P1-Q2R3-S4T5U6V7W8X9</key>
 		<dict>
 			<key>xpos</key>
 			<real>30</real>
 			<key>ypos</key>
-			<real>885</real>
+			<real>525</real>
 		</dict>
 		<key>J5K6L7M8-N9O0-P1Q2-R3S4-T5U6V7W8X9Y0</key>
 		<dict>
 			<key>xpos</key>
 			<real>285</real>
 			<key>ypos</key>
-			<real>885</real>
+			<real>525</real>
 		</dict>
 		<key>K6L7M8N9-O0P1-Q2R3-S4T5-U6V7W8X9Y0Z1</key>
 		<dict>
 			<key>xpos</key>
 			<real>405</real>
 			<key>ypos</key>
-			<real>885</real>
+			<real>525</real>
 		</dict>
 		<key>L7M8N9O0-P1Q2-R3S4-T5U6-V7W8X9Y0Z1A2</key>
 		<dict>
 			<key>xpos</key>
 			<real>30</real>
 			<key>ypos</key>
-			<real>1045</real>
+			<real>685</real>
 		</dict>
 		<key>M8N9O0P1-Q2R3-S4T5-U6V7-W8X9Y0Z1A2B3</key>
 		<dict>
 			<key>xpos</key>
 			<real>285</real>
 			<key>ypos</key>
-			<real>1045</real>
+			<real>685</real>
 		</dict>
 		<key>N9O0P1Q2-R3S4-T5U6-V7W8-X9Y0Z1A2B3C4</key>
 		<dict>
 			<key>xpos</key>
 			<real>405</real>
 			<key>ypos</key>
-			<real>1045</real>
+			<real>685</real>
+		</dict>
+		<key>A1B2C3D4-E5F6-G7H8-I9J0-K1L2M3N4O5P6</key>
+		<dict>
+			<key>xpos</key>
+			<real>30</real>
+			<key>ypos</key>
+			<real>845</real>
+		</dict>
+		<key>B2C3D4E5-F6G7-H8I9-J0K1-L2M3N4O5P6Q7</key>
+		<dict>
+			<key>xpos</key>
+			<real>285</real>
+			<key>ypos</key>
+			<real>845</real>
+		</dict>
+		<key>C3D4E5F6-G7H8-I9J0-K1L2-M3N4O5P6Q7R8</key>
+		<dict>
+			<key>xpos</key>
+			<real>405</real>
+			<key>ypos</key>
+			<real>845</real>
+		</dict>
+		<key>O0P1Q2R3-S4T5-U6V7-W8X9-Y0Z1A2B3C4D5</key>
+		<dict>
+			<key>xpos</key>
+			<real>30</real>
+			<key>ypos</key>
+			<real>1005</real>
+		</dict>
+		<key>P1Q2R3S4-T5U6-V7W8-X9Y0-Z1A2B3C4D5E6</key>
+		<dict>
+			<key>xpos</key>
+			<real>285</real>
+			<key>ypos</key>
+			<real>1005</real>
+		</dict>
+		<key>Q2R3S4T5-U6V7-W8X9-Y0Z1-A2B3C4D5E6F7</key>
+		<dict>
+			<key>xpos</key>
+			<real>405</real>
+			<key>ypos</key>
+			<real>1005</real>
 		</dict>
 	</dict>
 	<key>userconfigurationconfig</key>
