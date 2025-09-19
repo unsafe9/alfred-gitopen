@@ -5,7 +5,9 @@ GitHub API and CLI utilities for Alfred Git Open workflow.
 import json
 import subprocess
 import re
-from typing import Tuple, List, Dict, Optional
+import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from typing import Tuple, List, Dict, Optional, Callable, Any
 from utils import run_command_with_success
 
 def check_gh_cli() -> Tuple[bool, str]:
@@ -65,38 +67,29 @@ def check_repo_exists(repo_name: str) -> bool:
     except Exception:
         return False
 
-def search_github_repos(query: str, limit: int = 20) -> List[Dict]:
+def search_github_repos(query: str, limit: int = 15, exclude_user_repos: bool = False) -> List[Dict]:
     """Search GitHub repositories using GitHub CLI."""
     try:
-        # Search repositories with various filters
-        cmd = [
-            'gh', 'repo', 'list', 
-            '--limit', str(limit),
-            '--json', 'name,owner,description,url,isPrivate,stargazerCount,updatedAt'
-        ]
+        # Build search query
+        search_query = query
         
-        # If query contains '/', treat it as owner/repo search
-        if '/' in query:
-            owner, repo = query.split('/', 1)
-            cmd.extend(['--search', f'{owner}/{repo}'])
-        else:
-            # Search in repository names and descriptions
-            cmd.extend(['--search', query])
+        # Add exclusion for user repositories if requested
+        if exclude_user_repos:
+            current_username = get_current_username()
+            if current_username:
+                search_query = f"{query} -user:{current_username}"
+        
+        # Search repositories using gh search repos
+        cmd = [
+            'gh', 'search', 'repos', search_query,
+            '--limit', str(limit),
+            '--json', 'name,owner,description,url,isPrivate,stargazersCount,updatedAt'
+        ]
         
         result = subprocess.run(cmd, capture_output=True, text=True)
         
         if result.returncode != 0:
-            # Try alternative search method
-            cmd = [
-                'gh', 'search', 'repos', query,
-                '--limit', str(limit),
-                '--json', 'name,owner,description,url,isPrivate,stargazersCount,updatedAt'
-            ]
-            
-            result = subprocess.run(cmd, capture_output=True, text=True)
-            
-            if result.returncode != 0:
-                raise Exception(f"GitHub search failed: {result.stderr}")
+            raise Exception(f"GitHub search failed: {result.stderr}")
         
         repos = json.loads(result.stdout)
         return repos
@@ -106,21 +99,41 @@ def search_github_repos(query: str, limit: int = 20) -> List[Dict]:
     except Exception as e:
         raise Exception(f"GitHub search failed: {str(e)}")
 
-def get_user_repos(limit: int = 50) -> List[Dict]:
-    """Get user's own repositories."""
+def get_current_username() -> str:
+    """Get the current GitHub username."""
     try:
+        user_result = subprocess.run(['gh', 'api', 'user'], capture_output=True, text=True)
+        if user_result.returncode == 0:
+            user_info = json.loads(user_result.stdout)
+            return user_info.get('login', '')
+    except Exception:
+        pass
+    return ''
+
+def get_user_repos(limit: int = 10, query: str = None) -> List[Dict]:
+    """Get user's own repositories using search with owner filter."""
+    try:
+        # Use gh search repos with owner filter
+        search_query = query.strip() if query and query.strip() else "*"
         cmd = [
-            'gh', 'repo', 'list',
+            'gh', 'search', 'repos', search_query,
+            '--owner', '@me',
             '--limit', str(limit),
-            '--json', 'name,owner,description,url,isPrivate,stargazerCount,updatedAt'
+            '--json', 'name,owner,description,url,isPrivate,stargazersCount,updatedAt'
         ]
         
         result = subprocess.run(cmd, capture_output=True, text=True)
         
         if result.returncode != 0:
-            raise Exception(f"Failed to get user repositories: {result.stderr}")
+            raise Exception(f"Failed to search user repositories: {result.stderr}")
         
         repos = json.loads(result.stdout)
+        
+        # Normalize field names (search uses stargazersCount, list uses stargazerCount)
+        for repo in repos:
+            if 'stargazersCount' in repo and 'stargazerCount' not in repo:
+                repo['stargazerCount'] = repo['stargazersCount']
+        
         return repos
         
     except json.JSONDecodeError as e:
@@ -353,4 +366,194 @@ def clone_repository_with_method(git_url: str, target_dir: str, is_private_meta:
     
     except Exception as e:
         return False, f"Error occurred: {str(e)}"
+
+
+# =============================================================================
+# GitHub Search Base Functions
+# =============================================================================
+
+def github_search_base(
+    empty_query_title: str,
+    empty_query_subtitle: str,
+    no_results_message: str,
+    repo_filter_func: Optional[Callable[[Dict[str, Any], str], bool]] = None,
+    item_formatter_func: Optional[Callable[[Dict[str, Any]], Dict[str, Any]]] = None,
+    search_limit: int = 15,
+    include_user_repos: bool = False
+) -> None:
+    """
+    Base function for GitHub repository search workflows.
+    
+    Args:
+        empty_query_title: Title to show when query is empty
+        empty_query_subtitle: Subtitle to show when query is empty
+        no_results_message: Message to show when no results found
+        repo_filter_func: Function to filter repositories (repo, username) -> bool
+        item_formatter_func: Function to format Alfred items from repo data
+        search_limit: Maximum number of search results
+        include_user_repos: Whether to include user's own repositories
+    """
+    from alfred import output, error_item, item, handle_empty_query, get_query_from_argv
+    
+    # Check if GitHub CLI is available
+    is_available, error_msg = check_gh_cli()
+    if not is_available:
+        alfred_error_item = error_item("GitHub CLI Required", error_msg)
+        output([alfred_error_item])
+        return
+    
+    # Get query from Alfred
+    query = get_query_from_argv()
+    
+    if not query.strip():
+        handle_empty_query(empty_query_title, empty_query_subtitle)
+        return
+    
+    try:
+        items = []
+        current_username = get_current_username()
+        
+        # Get repositories using parallel execution
+        all_repos = []
+        seen_urls = set()
+        
+        # Execute searches in parallel
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            futures = []
+            
+            # Submit user repos search if requested
+            if include_user_repos:
+                user_repos_future = executor.submit(get_user_repos, 10, query)
+                futures.append(('user_repos', user_repos_future))
+            
+            # Submit public repos search (exclude user repos if we're including them separately)
+            search_repos_future = executor.submit(search_github_repos, query, search_limit, include_user_repos)
+            futures.append(('search_repos', search_repos_future))
+            
+            # Collect results as they complete
+            user_repos = []
+            search_repos = []
+            
+            for future_type, future in futures:
+                try:
+                    result = future.result(timeout=30)
+                    if future_type == 'user_repos':
+                        user_repos = result
+                    elif future_type == 'search_repos':
+                        search_repos = result
+                except Exception as e:
+                    # Log error but continue with other results
+                    pass  # Silently handle errors from individual searches
+                    if future_type == 'user_repos':
+                        user_repos = []
+                    elif future_type == 'search_repos':
+                        search_repos = []
+        
+        # Add user repos first (higher priority)
+        for repo in user_repos:
+            url = repo.get('url', '')
+            if url not in seen_urls:
+                all_repos.append(repo)
+                seen_urls.add(url)
+        
+        # Add search results
+        for repo in search_repos:
+            url = repo.get('url', '')
+            if url not in seen_urls:
+                all_repos.append(repo)
+                seen_urls.add(url)
+        
+        # Filter and format repositories
+        for repo in all_repos[:search_limit]:
+            # Apply filter if provided
+            if repo_filter_func and not repo_filter_func(repo, current_username):
+                continue
+            
+            # Format item
+            if item_formatter_func:
+                alfred_item = item_formatter_func(repo)
+                if alfred_item:
+                    items.append(alfred_item)
+            else:
+                # Default formatting
+                owner = repo.get('owner', {})
+                repo_name = repo.get('name', '')
+                owner_login = owner.get('login', '') if isinstance(owner, dict) else str(owner)
+                full_name = f"{owner_login}/{repo_name}"
+                clone_url = repo.get('url', '')
+                is_private = repo.get('isPrivate', False)
+                
+                alfred_item = item(
+                    full_name,
+                    format_repo_subtitle(repo),
+                    f"{clone_url}|{is_private}"
+                )
+                items.append(alfred_item)
+        
+        if not items:
+            no_results_item_result = item("No repositories found", no_results_message.format(query=query), valid=False)
+            items.append(no_results_item_result)
+        
+        output(items)
+        
+    except Exception as e:
+        alfred_error_item = error_item("Search failed", f"GitHub search failed: {str(e)}")
+        output([alfred_error_item])
+
+
+def clone_repo_filter(repo: Dict[str, Any], username: str) -> bool:
+    """Filter function for clone workflow - includes all repositories."""
+    return True
+
+
+def fork_repo_filter(repo: Dict[str, Any], username: str) -> bool:
+    """Filter function for fork workflow - excludes user's own repositories."""
+    owner = repo.get('owner', {})
+    owner_login = owner.get('login', '') if isinstance(owner, dict) else str(owner)
+    return owner_login != username
+
+
+def clone_item_formatter(repo: Dict[str, Any]) -> Dict[str, Any]:
+    """Format Alfred item for clone workflow."""
+    from alfred import item
+    
+    owner = repo.get('owner', {})
+    repo_name = repo.get('name', '')
+    owner_login = owner.get('login', '') if isinstance(owner, dict) else str(owner)
+    full_name = f"{owner_login}/{repo_name}"
+    clone_url = repo.get('url', '')
+    is_private = repo.get('isPrivate', False)
+    
+    return item(
+        full_name,
+        format_repo_subtitle(repo),
+        f"{clone_url}|{is_private}"
+    )
+
+
+def fork_item_formatter(repo: Dict[str, Any]) -> Dict[str, Any]:
+    """Format Alfred item for fork workflow."""
+    from alfred import item
+    
+    owner = repo.get('owner', {})
+    repo_name = repo.get('name', '')
+    owner_login = owner.get('login', '') if isinstance(owner, dict) else str(owner)
+    full_name = f"{owner_login}/{repo_name}"
+    is_private = repo.get('isPrivate', False)
+    
+    # Create subtitle with fork indication
+    subtitle_parts = []
+    if repo.get('isFork', False):
+        subtitle_parts.append("🍴 Fork")
+    
+    subtitle = format_repo_subtitle(repo)
+    if subtitle_parts:
+        subtitle = " • ".join(subtitle_parts) + " • " + subtitle
+    
+    return item(
+        f"🍴 Fork {full_name}",
+        subtitle,
+        f"{full_name}|{is_private}",
+        icon_type="default"
+    )
 
