@@ -51,6 +51,19 @@ def main():
         arg_format = f"{repo_name}|{{app_path}}"
 
     found_ides = []
+    
+    # Add Finder option
+    finder_path = "/System/Library/CoreServices/Finder.app"
+    finder_item = item(f"{title_prefix} Finder", "Open in Finder", arg_format.format(app_path="FINDER"), icon_type="fileicon")
+    finder_item["icon"]["path"] = finder_path
+    found_ides.append(finder_item)
+    
+    # Add Terminal option
+    terminal_path = "/System/Applications/Utilities/Terminal.app"
+    terminal_item = item(f"{title_prefix} Terminal", "Open in Terminal", arg_format.format(app_path="TERMINAL"), icon_type="fileicon")
+    terminal_item["icon"]["path"] = terminal_path
+    found_ides.append(terminal_item)
+    
     # Get IDEs to check from config
     ides_to_check = get_ides_to_check()
     

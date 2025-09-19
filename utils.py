@@ -20,7 +20,14 @@ def show_notification(title: str, message: str) -> None:
         pass  # Ignore notification failures
 
 def open_with_ide(ide_path: str, project_path: str) -> bool:
-    """Open project with selected IDE."""
+    """Open project with selected IDE or special app."""
+    # Handle special cases
+    if ide_path == "FINDER":
+        return open_in_finder(project_path)
+    elif ide_path == "TERMINAL":
+        return open_in_terminal(project_path)
+    
+    # Handle regular IDE
     try:
         subprocess.run(['open', '-a', ide_path, project_path], check=True)
         return True
