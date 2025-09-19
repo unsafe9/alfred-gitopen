@@ -267,7 +267,7 @@
 				<key>scriptfile</key>
 				<string></string>
 				<key>subtext</key>
-				<string></string>
+				<string>Search for Git repositories within your workspace directory</string>
 				<key>title</key>
 				<string>Git Open</string>
 				<key>type</key>
@@ -339,7 +339,7 @@
 				<key>scriptfile</key>
 				<string></string>
 				<key>subtext</key>
-				<string></string>
+				<string>Display recent projects from your supported IDEs for quick access</string>
 				<key>title</key>
 				<string>Git Open - Recent</string>
 				<key>type</key>
@@ -388,7 +388,7 @@
 				<key>scriptfile</key>
 				<string></string>
 				<key>subtext</key>
-				<string></string>
+				<string>Find Git repository URLs from Alfred's clipboard history and clone them</string>
 				<key>title</key>
 				<string>Git Clone</string>
 				<key>type</key>
@@ -507,7 +507,7 @@
 				<key>scriptfile</key>
 				<string></string>
 				<key>subtext</key>
-				<string></string>
+				<string>Create a new directory and initialize it as a Git repository</string>
 				<key>title</key>
 				<string>Git Init</string>
 				<key>type</key>
@@ -626,7 +626,7 @@
 				<key>scriptfile</key>
 				<string></string>
 				<key>subtext</key>
-				<string></string>
+				<string>Search and clone GitHub repositories by username/repository name or keywords</string>
 				<key>title</key>
 				<string>GitHub Clone</string>
 				<key>type</key>
@@ -838,7 +838,7 @@
 				<key>scriptfile</key>
 				<string></string>
 				<key>subtext</key>
-				<string></string>
+				<string>Fork and clone GitHub repositories</string>
 				<key>title</key>
 				<string>GitHub Fork</string>
 				<key>type</key>
