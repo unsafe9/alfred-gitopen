@@ -25,17 +25,32 @@ def create_alfred_output(items):
 
 def main():
     """Main execution function."""
-    # The repository path is expected as a command-line argument from Alfred
+    # The repository path or git URL is expected as a command-line argument from Alfred
     if len(sys.argv) < 2:
         error_item = {
-            "title": "Error: No repository path provided",
-            "subtitle": "This script expects a repository path as an argument.",
+            "title": "Error: No repository path or Git URL provided",
+            "subtitle": "This script expects a repository path or Git URL as an argument.",
             "valid": False,
         }
         create_alfred_output([error_item])
         sys.exit(1)
         
-    repo_path = sys.argv[1]
+    input_arg = sys.argv[1]
+    
+    # Check if input is a Git URL (starts with http, https, git@ or contains .git)
+    is_git_url = (input_arg.startswith(('http://', 'https://', 'git@')) or 
+                  '.git' in input_arg)
+    
+    if is_git_url:
+        # For Git URLs, prepare for clone operation and IDE selection
+        git_url = input_arg
+        title_prefix = "Clone & Open with"
+        arg_format = f"{git_url}|{{app_path}}"
+    else:
+        # For existing local paths
+        repo_path = input_arg
+        title_prefix = "Open with"
+        arg_format = f"{{app_path}}|{repo_path}"
 
     found_ides = []
     # Get IDEs to check from config
@@ -47,9 +62,9 @@ def main():
         if app_path:
             # If an IDE is found, create an Alfred item for it
             item = {
-                "title": app_name,
+                "title": f"{title_prefix} {app_name}",
                 "subtitle": f"{app_path}",
-                "arg": f"{app_path}|{repo_path}",
+                "arg": arg_format.format(app_path=app_path),
                 "icon": {"type": "fileicon", "path": app_path},
             }
             found_ides.append(item)
