@@ -9,8 +9,8 @@ A simple Alfred workflow to quickly find and open local Git repositories and rec
 
 ## Installation
 
-Download the latest version from the Releases page. <!-- TODO: Add a real link -->
-Double-click the downloaded `.alfredworkflow` file to install it in Alfred.
+Download the latest version from the Releases page.
+Open the downloaded `.alfredworkflow` file to install it in Alfred.
 
 ## Configuration
 
