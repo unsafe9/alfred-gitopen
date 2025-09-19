@@ -170,8 +170,8 @@ def create_github_repository(repo_name: str, private: bool = True, description: 
         
         if description:
             cmd.extend(['--description', description])
-        else:
-            cmd.extend(['--description', 'Repository created via Alfred Git Open workflow'])
+        #else:
+        #    cmd.extend(['--description', 'Repository created via Alfred Git Open workflow'])
         
         cmd.append('--add-readme')  # Initialize with README
         
