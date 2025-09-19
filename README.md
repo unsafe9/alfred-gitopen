@@ -13,13 +13,18 @@ Authenticate: `gh auth login`
 
 ## Usage
 
-- **`gitopen {search_term}`**: Searches for Git repositories within your workspace directory. Select a repository to open it in your chosen IDE.
-- **`gitrecent {search_term}`**: Displays a list of recent projects from your supported IDEs for quick access.
-- **`gitclone`**: Finds Git repository URLs from Alfred's clipboard history, allows you to select one to clone and open in your chosen IDE.
-- **`gitinit {repository_name}`**: Creates a new directory with the specified name, initializes it as a Git repository, and opens it in your chosen IDE.
-- **`githubclone {search_term}`**: Search and clone GitHub repositories by username/repository name or keywords, including private repositories for authenticated users.
-- **`githubinit {repository_name}`**: Create a new GitHub repository, initialize it locally, and open it in your chosen IDE.
-- **`githubfork {repository_url}`**: Fork and clone GitHub repositories.
+All commands will prompt you to select your preferred IDE to open the repository after completion.
+
+### Local Git Commands
+- **`gitopen {search_term}`**: Search for Git repositories within your workspace directory.
+- **`gitrecent {search_term}`**: Display recent projects from your supported IDEs for quick access.
+- **`gitclone`**: Find Git repository URLs from Alfred's clipboard history and clone them.
+- **`gitinit {repository_name}`**: Create a new directory, initialize it as a Git repository.
+
+### GitHub Commands
+- **`ghclone {search_term}`**: Search and clone GitHub repositories by username/repository name or keywords, including private repositories.
+- **`ghinit {repository_name}`**: Create a new GitHub repository and initialize it locally.
+- **`ghfork {repository_url}`**: Fork and clone GitHub repositories.
 
 ## Installation
 
