@@ -1,0 +1,16 @@
+# Alfred workflow preferences
+prefs.plist
+
+# Python cache
+__pycache__/
+*.pyc
+
+# macOS folder settings
+.DS_Store
+
+# Backup files
+*.backup
+
+# Release artifacts
+build/
+*.alfredworkflow

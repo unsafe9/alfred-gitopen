@@ -1,0 +1,28 @@
+# Git Open Alfred Workflow
+
+A simple Alfred workflow to quickly find and open local Git repositories and recent projects with your favorite IDE.
+
+## Usage
+
+- **`code {search_term}`**: Searches for Git repositories within your workspace directory. Select a repository to open it in your chosen IDE.
+- **`recent {search_term}`**: Displays a list of recent projects from your supported IDEs for quick access.
+
+## Installation
+
+Download the latest version from the Releases page. <!-- TODO: Add a real link -->
+Double-click the downloaded `.alfredworkflow` file to install it in Alfred.
+
+## Configuration
+
+You can customize the workflow by setting variables in Alfred's workflow configuration panel (`[x]`).
+
+- `WORKSPACE_DIR`: The base directory path to search for Git repositories. (Default: `~/workspace`)
+- `MAX_DEPTH`: The maximum depth of subdirectories to search. (Default: `3`)
+
+### Supported IDEs
+
+This workflow supports VSCode-like IDEs (e.g., Visual Studio Code, Cursor) and JetBrains IDEs. For a detailed list or to add new IDEs, please refer to the `config.py` file.
+
+## License
+
+MIT License
