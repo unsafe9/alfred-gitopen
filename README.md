@@ -1,6 +1,8 @@
 # Git Open Alfred Workflow
 
-A simple Alfred workflow to quickly find and open local Git repositories and recent projects with your favorite IDE.
+> **Development Notice**: This Alfred workflow may contain bugs or unstable behavior as it was developed with AI assistance and is currently in **alpha version**. Please report any issues or suggestions.
+
+This workflow is designed to boost your project start or help you quickly continue your work by letting you easily search and open any Git repositories with your preferred IDE.
 
 ## Prerequisites
 
