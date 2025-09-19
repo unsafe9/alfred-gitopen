@@ -2,12 +2,23 @@
 
 A simple Alfred workflow to quickly find and open local Git repositories and recent projects with your favorite IDE.
 
+## Prerequisites
+
+Some commands require **GitHub CLI (`gh`)** to be installed and authenticated:
+
+- **`githubclone`**: Requires GitHub CLI for repository search and private repository access
+- **Private repository cloning**: GitHub CLI provides the most reliable authentication for private repositories
+
+Install GitHub CLI: `brew install gh`  
+Authenticate: `gh auth login`
+
 ## Usage
 
 - **`gitopen {search_term}`**: Searches for Git repositories within your workspace directory. Select a repository to open it in your chosen IDE.
 - **`gitrecent {search_term}`**: Displays a list of recent projects from your supported IDEs for quick access.
 - **`gitclone`**: Finds Git repository URLs from Alfred's clipboard history, allows you to select one to clone and open in your chosen IDE.
 - **`gitinit {repository_name}`**: Creates a new directory with the specified name, initializes it as a Git repository, and opens it in your chosen IDE.
+- **`githubclone {search_term}`**: Search and clone GitHub repositories by username/repository name or keywords, including private repositories for authenticated users.
 
 ## Installation
 
@@ -33,14 +44,16 @@ MIT License
 
 The following features require GitHub CLI (`gh`) to be pre-installed. Install it via: `brew install gh`
 
-### Planned Commands
+### Implemented Commands
 
-1. **`githubclone {search_term}`**: Search and clone GitHub repositories
+1. **`githubclone {search_term}`**: Search and clone GitHub repositories ✅
    - Search GitHub repositories by username/repository name or keywords
    - Display search results in Alfred with repository details
    - Show both public repositories and private repositories (for authenticated user)
    - After selecting a repository and IDE, automatically clone and open in chosen IDE
    - Support for organization repositories and starred repositories
+
+### Planned Commands
 
 2. **`githubinit {repository_name}`**: Create new GitHub repository and initialize locally
    - Input repository name and select IDE

@@ -91,6 +91,32 @@
 				<false/>
 			</dict>
 		</array>
+		<key>L7M8N9O0-P1Q2-R3S4-T5U6-V7W8X9Y0Z1A2</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>M8N9O0P1-Q2R3-S4T5-U6V7-W8X9Y0Z1A2B3</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>M8N9O0P1-Q2R3-S4T5-U6V7-W8X9Y0Z1A2B3</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>N9O0P1Q2-R3S4-T5U6-V7W8-X9Y0Z1A2B3C4</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>B023C0B5-9AFF-4414-A797-36E22A1353FA</key>
 		<array>
 			<dict>
@@ -213,15 +239,15 @@
 				<key>keyword</key>
 				<string>gitopen</string>
 				<key>queuedelaycustom</key>
-				<integer>3</integer>
+				<integer>1</integer>
 				<key>queuedelayimmediatelyinitially</key>
-				<true/>
+				<false/>
 				<key>queuedelaymode</key>
-				<integer>0</integer>
+				<integer>1</integer>
 				<key>queuemode</key>
 				<integer>1</integer>
 				<key>runningsubtext</key>
-				<string></string>
+				<string>Searching local repositories for "{query}"...</string>
 				<key>script</key>
 				<string>python3 git_repo_finder.py</string>
 				<key>scriptargtype</key>
@@ -320,15 +346,15 @@ open -a "$APP_PATH" "$REPO_PATH"</string>
 				<key>keyword</key>
 				<string>gitrecent</string>
 				<key>queuedelaycustom</key>
-				<integer>3</integer>
+				<integer>1</integer>
 				<key>queuedelayimmediatelyinitially</key>
-				<true/>
+				<false/>
 				<key>queuedelaymode</key>
-				<integer>0</integer>
+				<integer>1</integer>
 				<key>queuemode</key>
 				<integer>1</integer>
 				<key>runningsubtext</key>
-				<string></string>
+				<string>Loading recent projects for "{query}"...</string>
 				<key>script</key>
 				<string>python3 recent_projects.py</string>
 				<key>scriptargtype</key>
@@ -595,6 +621,128 @@ python3 git_init_handler.py "$INPUT"</string>
 			<key>version</key>
 			<integer>2</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<false/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>githubclone</string>
+				<key>queuedelaycustom</key>
+				<integer>1</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>1</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string>Searching GitHub repositories for "{query}"...</string>
+				<key>script</key>
+				<string>python3 github_repo_search.py "$1"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string>GitHub Clone</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>L7M8N9O0-P1Q2-R3S4-T5U6-V7W8X9Y0Z1A2</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<true/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>script</key>
+				<string>python3 ide_selector.py "$1"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string>Select an IDE to clone and open with...</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>M8N9O0P1-Q2R3-S4T5-U6V7-W8X9Y0Z1A2B3</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>#!/bin/bash
+
+INPUT="$1"
+python3 git_clone_handler.py "$INPUT"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>N9O0P1Q2-R3S4-T5U6-V7W8-X9Y0Z1A2B3C4</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string></string>
@@ -684,6 +832,27 @@ python3 git_init_handler.py "$INPUT"</string>
 			<key>ypos</key>
 			<real>885</real>
 		</dict>
+		<key>L7M8N9O0-P1Q2-R3S4-T5U6-V7W8X9Y0Z1A2</key>
+		<dict>
+			<key>xpos</key>
+			<real>30</real>
+			<key>ypos</key>
+			<real>1045</real>
+		</dict>
+		<key>M8N9O0P1-Q2R3-S4T5-U6V7-W8X9Y0Z1A2B3</key>
+		<dict>
+			<key>xpos</key>
+			<real>285</real>
+			<key>ypos</key>
+			<real>1045</real>
+		</dict>
+		<key>N9O0P1Q2-R3S4-T5U6-V7W8-X9Y0Z1A2B3C4</key>
+		<dict>
+			<key>xpos</key>
+			<real>405</real>
+			<key>ypos</key>
+			<real>1045</real>
+		</dict>
 	</dict>
 	<key>userconfigurationconfig</key>
 	<array>
@@ -732,6 +901,48 @@ python3 git_init_handler.py "$INPUT"</string>
 			<string>slider</string>
 			<key>variable</key>
 			<string>MAX_DEPTH</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>https</string>
+				<key>placeholder</key>
+				<string>https or ssh</string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>Choose clone method for public repositories</string>
+			<key>label</key>
+			<string>Clone Method (Public Repos)</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>CLONE_METHOD_PUBLIC</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>ssh</string>
+				<key>placeholder</key>
+				<string>https, ssh, or gh</string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>Choose clone method for private repositories (gh = GitHub CLI)</string>
+			<key>label</key>
+			<string>Clone Method (Private Repos)</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>CLONE_METHOD_PRIVATE</string>
 		</dict>
 	</array>
 	<key>version</key>

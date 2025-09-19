@@ -5,14 +5,76 @@ import sys
 import subprocess
 import threading
 import time
+import re
 from pathlib import Path
 from config import get_workspace_dir
 
-def clone_repository(git_url, target_dir, progress_callback=None):
-    """Clone a Git repository."""
+def is_private_repo(git_url, is_private_meta=None):
+    """Check if repository is private."""
+    # If metadata is provided, use it
+    if is_private_meta is not None:
+        return is_private_meta
+    
+    # Fallback: check if it's from user's account
     try:
-        # Execute git clone command
-        cmd = ['git', 'clone', git_url, target_dir]
+        result = subprocess.run(['gh', 'api', 'user'], capture_output=True, text=True)
+        if result.returncode == 0:
+            user_info = json.loads(result.stdout)
+            username = user_info.get('login', '')
+            
+            # Check if URL contains the user's username
+            if username and f'/{username}/' in git_url:
+                return True
+    except Exception:
+        pass
+    
+    return False
+
+def convert_to_ssh_url(git_url):
+    """Convert HTTPS GitHub URL to SSH format."""
+    # Pattern: https://github.com/owner/repo.git -> git@github.com:owner/repo.git
+    https_pattern = r'https://github\.com/([^/]+)/([^/]+?)(?:\.git)?/?$'
+    match = re.match(https_pattern, git_url)
+    
+    if match:
+        owner, repo = match.groups()
+        return f"git@github.com:{owner}/{repo}.git"
+    
+    return git_url
+
+def get_clone_method(git_url, is_private_meta=None):
+    """Determine the best clone method based on repository type and user settings."""
+    is_private = is_private_repo(git_url, is_private_meta)
+    
+    if is_private:
+        method = os.environ.get('CLONE_METHOD_PRIVATE', 'ssh').lower()
+    else:
+        method = os.environ.get('CLONE_METHOD_PUBLIC', 'https').lower()
+    
+    return method
+
+def clone_repository(git_url, target_dir, is_private_meta=None, progress_callback=None):
+    """Clone a Git repository using the appropriate method."""
+    try:
+        clone_method = get_clone_method(git_url, is_private_meta)
+        
+        if clone_method == 'gh':
+            # Use GitHub CLI to clone (handles authentication automatically)
+            cmd = ['gh', 'repo', 'clone', git_url, target_dir]
+        else:
+            # Use git clone with URL conversion if needed
+            if clone_method == 'ssh' and git_url.startswith('https://github.com/'):
+                git_url = convert_to_ssh_url(git_url)
+            elif clone_method == 'https' and git_url.startswith('git@github.com:'):
+                # Convert SSH to HTTPS (reverse conversion)
+                ssh_pattern = r'git@github\.com:([^/]+)/([^/]+?)(?:\.git)?$'
+                match = re.match(ssh_pattern, git_url)
+                if match:
+                    owner, repo = match.groups()
+                    git_url = f"https://github.com/{owner}/{repo}.git"
+            
+            cmd = ['git', 'clone', git_url, target_dir]
+        
         process = subprocess.Popen(
             cmd,
             stdout=subprocess.PIPE,
@@ -25,6 +87,24 @@ def clone_repository(git_url, target_dir, progress_callback=None):
         if process.returncode == 0:
             return True, f"Successfully cloned to: {target_dir}"
         else:
+            # If SSH fails, try HTTPS as fallback for public repos
+            if clone_method == 'ssh' and not is_private_repo(git_url, is_private_meta):
+                https_url = git_url
+                if git_url.startswith('git@github.com:'):
+                    ssh_pattern = r'git@github\.com:([^/]+)/([^/]+?)(?:\.git)?$'
+                    match = re.match(ssh_pattern, git_url)
+                    if match:
+                        owner, repo = match.groups()
+                        https_url = f"https://github.com/{owner}/{repo}.git"
+                
+                # Try HTTPS fallback
+                cmd = ['git', 'clone', https_url, target_dir]
+                process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                stdout, stderr = process.communicate()
+                
+                if process.returncode == 0:
+                    return True, f"Successfully cloned to: {target_dir} (using HTTPS fallback)"
+            
             return False, f"Clone failed: {stderr}"
     
     except Exception as e:
@@ -67,11 +147,22 @@ def main():
         sys.exit(1)
     
     # Parse arguments received from Alfred
-    # Format: "git_url|ide_path"
+    # Format: "git_url|is_private|ide_path" or "git_url|ide_path"
     arg = sys.argv[1]
     
     try:
-        git_url, ide_path = arg.split('|', 1)
+        parts = arg.split('|')
+        if len(parts) == 3:
+            # New format with privacy metadata
+            git_url, is_private_str, ide_path = parts
+            is_private_meta = is_private_str.lower() == 'true'
+        elif len(parts) == 2:
+            # Old format or direct URL
+            git_url, ide_path = parts
+            is_private_meta = None
+        else:
+            print("Invalid argument format", file=sys.stderr)
+            sys.exit(1)
     except ValueError:
         print("Invalid argument format", file=sys.stderr)
         sys.exit(1)
@@ -102,7 +193,7 @@ def main():
     show_notification("Git Clone", f"Starting to clone {repo_name}...")
     
     # Execute Git clone
-    success, message = clone_repository(git_url, target_path)
+    success, message = clone_repository(git_url, target_path, is_private_meta)
     
     if success:
         # Show success notification
