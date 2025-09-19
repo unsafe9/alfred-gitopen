@@ -18,6 +18,7 @@ from config import (
     JETBRAINS_IDES,
     VSCODE_IDES
 )
+from alfred import output, item, no_results_item
 
 def get_jetbrains_recent_projects(ide_name, app_path):
     """Get recent projects for JetBrains IDEs."""
@@ -218,11 +219,7 @@ def main():
     
     alfred_items = []
     if not sorted_projects:
-        alfred_items.append({
-            "title": "No recent projects found",
-            "subtitle": "Check your app paths and config patterns in the script.",
-            "valid": False
-        })
+        alfred_items.append(no_results_item("", "recent projects"))
 
     for proj in sorted_projects:
         # Format timestamp if available
@@ -233,14 +230,11 @@ def main():
         else:
             subtitle = proj['path']
 
-        alfred_items.append({
-            "title": f"{proj['name']} ({proj['ide_name']})",
-            "subtitle": subtitle,
-            "arg": f"{proj['app_path']}|{proj['path']}",
-            "icon": {"type": "fileicon", "path": proj['app_path']}
-        })
+        alfred_item = item(f"{proj['name']} ({proj['ide_name']})", subtitle, f"{proj['app_path']}|{proj['path']}", icon_type="fileicon")
+        alfred_item["icon"]["path"] = proj['app_path']
+        alfred_items.append(alfred_item)
         
-    print(json.dumps({"items": alfred_items}))
+    output(alfred_items)
 
 
 if __name__ == "__main__":

@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 import os
-import json
 import sys
 import subprocess
 from pathlib import Path
 from config import get_workspace_dir
+from utils import show_notification, open_with_ide, open_in_finder
+from alfred import print_error
+from git import init_repository, validate_local_repo_name
 
 def create_and_init_repository(repo_name, workspace_dir):
     """Create a new directory and initialize it as a Git repository."""
@@ -20,44 +22,21 @@ def create_and_init_repository(repo_name, workspace_dir):
         os.makedirs(target_path, exist_ok=True)
         
         # Initialize Git repository
-        result = subprocess.run(
-            ['git', 'init'],
-            cwd=target_path,
-            capture_output=True,
-            text=True
-        )
+        success, message = init_repository(target_path)
         
-        if result.returncode != 0:
+        if not success:
             # Clean up directory if git init failed
             try:
                 os.rmdir(target_path)
             except OSError:
                 pass
-            return False, f"Failed to initialize Git repository: {result.stderr}"
+            return False, message
         
         return True, target_path
         
     except Exception as e:
         return False, f"Error creating repository: {str(e)}"
 
-def open_with_ide(ide_path, project_path):
-    """Open project with selected IDE."""
-    try:
-        subprocess.run(['open', '-a', ide_path, project_path], check=True)
-        return True
-    except subprocess.CalledProcessError:
-        return False
-
-def show_notification(title, message):
-    """Show macOS notification."""
-    try:
-        cmd = [
-            'osascript', '-e',
-            f'display notification "{message}" with title "{title}"'
-        ]
-        subprocess.run(cmd, check=True)
-    except subprocess.CalledProcessError:
-        pass  # Ignore notification failures
 
 def main():
     """Main execution function."""
@@ -76,16 +55,9 @@ def main():
         sys.exit(1)
     
     # Validate repository name
-    if not repo_name or not repo_name.strip():
-        print("Repository name cannot be empty", file=sys.stderr)
-        sys.exit(1)
-    
-    repo_name = repo_name.strip()
-    
-    # Check for invalid characters in repository name (macOS filesystem)
-    invalid_chars = ['/', ':']
-    if any(char in repo_name for char in invalid_chars):
-        print(f"Repository name contains invalid characters: {', '.join(invalid_chars)}", file=sys.stderr)
+    is_valid, error_message = validate_local_repo_name(repo_name)
+    if not is_valid:
+        print(error_message, file=sys.stderr)
         sys.exit(1)
     
     # Get workspace directory
@@ -114,7 +86,7 @@ def main():
         else:
             print(f"Repository created successfully but failed to open IDE: {project_path}")
             # Open folder in Finder as fallback
-            subprocess.run(['open', project_path])
+            open_in_finder(project_path)
     else:
         error_message = result
         # Show failure notification

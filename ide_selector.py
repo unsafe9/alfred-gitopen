@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import os
-import json
 import sys
 from config import get_ides_to_check, get_app_search_paths
+from alfred import output, error_item, item, handle_error
 
 def find_app_path(app_name):
     """Checks for an app in standard macOS application directories."""
@@ -18,22 +18,12 @@ def find_app_path(app_name):
             return str(full_path)
     return None
 
-def create_alfred_output(items):
-    """Creates and prints the JSON output for Alfred."""
-    alfred_json = {"items": items}
-    sys.stdout.write(json.dumps(alfred_json, indent=4))
 
 def main():
     """Main execution function."""
     # The repository path or git URL is expected as a command-line argument from Alfred
     if len(sys.argv) < 2:
-        error_item = {
-            "title": "Error: No repository path or Git URL provided",
-            "subtitle": "This script expects a repository path or Git URL as an argument.",
-            "valid": False,
-        }
-        create_alfred_output([error_item])
-        sys.exit(1)
+        handle_error("Error: No repository path or Git URL provided", "This script expects a repository path or Git URL as an argument.")
         
     input_arg = sys.argv[1]
     
@@ -69,24 +59,16 @@ def main():
         app_path = find_app_path(app_name)
         if app_path:
             # If an IDE is found, create an Alfred item for it
-            item = {
-                "title": f"{title_prefix} {app_name}",
-                "subtitle": f"{app_path}",
-                "arg": arg_format.format(app_path=app_path),
-                "icon": {"type": "fileicon", "path": app_path},
-            }
-            found_ides.append(item)
+            alfred_item = item(f"{title_prefix} {app_name}", app_path, arg_format.format(app_path=app_path), icon_type="fileicon")
+            alfred_item["icon"]["path"] = app_path
+            found_ides.append(alfred_item)
 
     # Output the results in Alfred's JSON format
     if not found_ides:
-        not_found_item = {
-            "title": "No supported IDEs found.",
-            "subtitle": "Checked paths from APP_SEARCH_PATHS",
-            "valid": False,
-        }
-        create_alfred_output([not_found_item])
+        not_found_item_result = item("No supported IDEs found.", "Checked paths from APP_SEARCH_PATHS", valid=False)
+        output([not_found_item_result])
     else:
-        create_alfred_output(found_ides)
+        output(found_ides)
 
 if __name__ == "__main__":
     main()

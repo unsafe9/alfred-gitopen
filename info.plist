@@ -14,7 +14,7 @@
 				<key>modifiers</key>
 				<integer>1048576</integer>
 				<key>modifiersubtext</key>
-				<string>{query}</string>
+				<string>$1</string>
 				<key>vitoclose</key>
 				<false/>
 			</dict>
@@ -24,7 +24,7 @@
 				<key>modifiers</key>
 				<integer>524288</integer>
 				<key>modifiersubtext</key>
-				<string>{query}</string>
+				<string>$1</string>
 				<key>vitoclose</key>
 				<false/>
 			</dict>
@@ -117,6 +117,32 @@
 				<false/>
 			</dict>
 		</array>
+		<key>O0P1Q2R3-S4T5-U6V7-W8X9-Y0Z1A2B3C4D5</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>P1Q2R3S4-T5U6-V7W8-X9Y0-Z1A2B3C4D5E6</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>P1Q2R3S4-T5U6-V7W8-X9Y0-Z1A2B3C4D5E6</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>Q2R3S4T5-U6V7-W8X9-Y0Z1-A2B3C4D5E6F7</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>B023C0B5-9AFF-4414-A797-36E22A1353FA</key>
 		<array>
 			<dict>
@@ -135,7 +161,7 @@
 				<key>modifiers</key>
 				<integer>1048576</integer>
 				<key>modifiersubtext</key>
-				<string>{query}</string>
+				<string>$1</string>
 				<key>vitoclose</key>
 				<false/>
 			</dict>
@@ -145,7 +171,7 @@
 				<key>modifiers</key>
 				<integer>524288</integer>
 				<key>modifiersubtext</key>
-				<string>{query}</string>
+				<string>$1</string>
 				<key>vitoclose</key>
 				<false/>
 			</dict>
@@ -289,7 +315,7 @@
 			<key>config</key>
 			<dict>
 				<key>path</key>
-				<string>{query}</string>
+				<string>$1</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.action.browseinterminal</string>
@@ -306,14 +332,7 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>#!/bin/bash
-
-INPUT="$1"
-
-APP_PATH=$(echo "$INPUT" | cut -d'|' -f1)
-REPO_PATH=$(echo "$INPUT" | cut -d'|' -f2-)
-
-open -a "$APP_PATH" "$REPO_PATH"</string>
+				<string>python3 open_with_ide.py "$1"</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -354,7 +373,7 @@ open -a "$APP_PATH" "$REPO_PATH"</string>
 				<key>queuemode</key>
 				<integer>1</integer>
 				<key>runningsubtext</key>
-				<string>Loading recent projects for "{query}"...</string>
+				<string>Loading recent projects for "$1"...</string>
 				<key>script</key>
 				<string>python3 recent_projects.py</string>
 				<key>scriptargtype</key>
@@ -481,10 +500,7 @@ open -a "$APP_PATH" "$REPO_PATH"</string>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>#!/bin/bash
-
-INPUT="$1"
-python3 git_clone_handler.py "$INPUT"</string>
+				<string>python3 git_clone_handler.py "$1"</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -603,10 +619,7 @@ python3 git_clone_handler.py "$INPUT"</string>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>#!/bin/bash
-
-INPUT="$1"
-python3 git_init_handler.py "$INPUT"</string>
+				<string>python3 git_init_handler.py "$1"</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -725,10 +738,7 @@ python3 git_init_handler.py "$INPUT"</string>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>#!/bin/bash
-
-INPUT="$1"
-python3 git_clone_handler.py "$INPUT"</string>
+				<string>python3 git_clone_handler.py "$1"</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -740,6 +750,99 @@ python3 git_clone_handler.py "$INPUT"</string>
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
 			<string>N9O0P1Q2-R3S4-T5U6-V7W8-X9Y0Z1A2B3C4</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmaxresults</key>
+				<integer>5</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<false/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>githubinit</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>runningsubtext</key>
+				<string>Validating repository name...</string>
+				<key>script</key>
+				<string>python3 github_init_input.py "$1"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string>Create a new GitHub repository and initialize locally</string>
+				<key>title</key>
+				<string>GitHub Init</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>O0P1Q2R3-S4T5-U6V7-W8X9-Y0Z1A2B3C4D5</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>python3 ide_selector.py "$1"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>P1Q2R3S4-T5U6-V7W8-X9Y0-Z1A2B3C4D5E6</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>python3 github_init_handler.py "$1"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>Q2R3S4T5-U6V7-W8X9-Y0Z1-A2B3C4D5E6F7</string>
 			<key>version</key>
 			<integer>2</integer>
 		</dict>
