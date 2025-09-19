@@ -41,16 +41,24 @@ def main():
     is_git_url = (input_arg.startswith(('http://', 'https://', 'git@')) or 
                   '.git' in input_arg)
     
+    # Check if input is an existing directory path
+    is_existing_path = os.path.isdir(input_arg)
+    
     if is_git_url:
         # For Git URLs, prepare for clone operation and IDE selection
         git_url = input_arg
         title_prefix = "Clone & Open with"
         arg_format = f"{git_url}|{{app_path}}"
-    else:
+    elif is_existing_path:
         # For existing local paths
         repo_path = input_arg
         title_prefix = "Open with"
         arg_format = f"{{app_path}}|{repo_path}"
+    else:
+        # For repository names (gitinit workflow)
+        repo_name = input_arg
+        title_prefix = "Init & Open with"
+        arg_format = f"{repo_name}|{{app_path}}"
 
     found_ides = []
     # Get IDEs to check from config

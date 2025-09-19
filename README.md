@@ -7,6 +7,7 @@ A simple Alfred workflow to quickly find and open local Git repositories and rec
 - **`gitopen {search_term}`**: Searches for Git repositories within your workspace directory. Select a repository to open it in your chosen IDE.
 - **`gitrecent {search_term}`**: Displays a list of recent projects from your supported IDEs for quick access.
 - **`gitclone`**: Finds Git repository URLs from Alfred's clipboard history, allows you to select one to clone and open in your chosen IDE.
+- **`gitinit {repository_name}`**: Creates a new directory with the specified name, initializes it as a Git repository, and opens it in your chosen IDE.
 
 ## Installation
 

@@ -34,6 +34,5 @@ open "$PACKAGE_NAME"
 
 # Clean up
 rm -rf "$BUILD_DIR"
-rm "$PACKAGE_NAME"
 
 echo "Workflow installed. Check Alfred for import dialog."
