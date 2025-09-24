@@ -331,7 +331,7 @@
 				<key>queuemode</key>
 				<integer>1</integer>
 				<key>runningsubtext</key>
-				<string>Loading recent projects for "$1"...</string>
+				<string>Loading recent projects for "{query}"...</string>
 				<key>script</key>
 				<string>python3 recent_projects.py</string>
 				<key>scriptargtype</key>
@@ -808,15 +808,15 @@
 			<key>config</key>
 			<dict>
 				<key>alfredfiltersresults</key>
-				<true/>
+				<false/>
 				<key>alfredfiltersresultsmatchmode</key>
 				<integer>0</integer>
 				<key>argumenttreatemptyqueryasnil</key>
-				<true/>
+				<false/>
 				<key>argumenttrimmode</key>
 				<integer>0</integer>
 				<key>argumenttype</key>
-				<integer>1</integer>
+				<integer>0</integer>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>keyword</key>
@@ -830,7 +830,7 @@
 				<key>queuemode</key>
 				<integer>1</integer>
 				<key>runningsubtext</key>
-				<string>Searching GitHub repositories to fork for "$1"...</string>
+				<string>Searching GitHub repositories to fork for "{query}"...</string>
 				<key>script</key>
 				<string>python3 github_fork_search.py "$1"</string>
 				<key>scriptargtype</key>
