@@ -40,11 +40,12 @@ def get_app_search_paths():
 # Default IDEs to check
 DEFAULT_IDES_TO_CHECK = [
     "Visual Studio Code",
-    "Cursor", 
+    "Cursor",
     "GoLand",
     "Rider",
     "WebStorm",
-    "IntelliJ IDEA"
+    "IntelliJ IDEA",
+    "IntelliJ IDEA Ultimate"
 ]
 
 def get_ides_to_check():
@@ -75,9 +76,10 @@ def get_ides_to_check():
 
 JETBRAINS_IDES = {
     'goland': 'GoLand.app',
-    'rider': 'Rider.app', 
+    'rider': 'Rider.app',
     'webstorm': 'WebStorm.app',
     'intellij idea': 'IntelliJ IDEA.app',
+    'intellij idea ultimate': 'IntelliJ IDEA.app',
     'pycharm': 'PyCharm.app',
     'phpstorm': 'PhpStorm.app',
     'rubymine': 'RubyMine.app',
